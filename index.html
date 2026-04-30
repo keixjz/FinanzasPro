@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanzasPro | Control de Ingresos, Egresos y Deudas</title>
+    <meta name="description" content="Gestiona tus finanzas personales de forma elegante y sencilla. Registra ingresos, gastos y controla tus deudas.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Finanzas<span>Pro</span></h1>
+        </header>
+
+        <!-- Resumen -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-title">Balance</div>
+                <div id="balance" class="card-value">$0.00</div>
+            </div>
+            <div class="card income">
+                <div class="card-title">Ingresos</div>
+                <div id="total-income" class="card-value">$0.00</div>
+            </div>
+            <div class="card expense">
+                <div class="card-title">Gastos</div>
+                <div id="total-expenses" class="card-value">$0.00</div>
+            </div>
+            <div class="card debt">
+                <div class="card-title">Deudas</div>
+                <div id="total-debt" class="card-value">$0.00</div>
+            </div>
+        </div>
+
+        <!-- Charts Section (Area marcada en rojo) -->
+        <div class="charts-container">
+            <div class="card chart-card">
+                <canvas id="flowChart"></canvas>
+            </div>
+            <div class="card chart-card">
+                <canvas id="debtChart"></canvas>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Forms Section -->
+            <aside>
+                <div class="card">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab('transaction')">Movimiento</div>
+                        <div class="tab" onclick="switchTab('debt')">Deuda</div>
+                        <div class="tab" onclick="switchTab('payment')">Abonar</div>
+                    </div>
+
+                    <!-- Transaction Form -->
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label for="desc">Descripción</label>
+                            <input type="text" id="desc" placeholder="Ej. Sueldo, Supermercado..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Monto</label>
+                            <input type="number" id="amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Tipo</label>
+                            <select id="type">
+                                <option value="income">Ingreso (+)</option>
+                                <option value="expense">Gasto (-)</option>
+                            </select>
+                        </div>
+                        <button type="submit">Agregar Registro</button>
+                    </form>
+
+                    <!-- Debt Form -->
+                    <form id="debt-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="debt-desc">¿A quién le debes? / Concepto</label>
+                            <input type="text" id="debt-desc" placeholder="Ej. Préstamo Banco, Juan..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="debt-amount">Monto Pendiente</label>
+                            <input type="number" id="debt-amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <button type="submit" style="background: var(--primary); color: black;">Registrar Deuda</button>
+                    </form>
+
+                    <!-- Payment Form (Abono) -->
+                    <form id="payment-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="select-debt">Seleccionar Deuda</label>
+                            <select id="select-debt" required>
+                                <option value="">-- Selecciona una deuda --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-amount">Monto a Abonar</label>
+                            <input type="number" id="payment-amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <button type="submit" style="border-color: #fff; color: #fff;">Realizar Abono</button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Lists Section -->
+            <main>
+                <section>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <h3 class="section-title" style="margin-bottom: 0; border: none;">Historial</h3>
+                        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="search-input" placeholder="Buscar movimiento..." style="width: 180px; padding: 0.3rem; font-size: 0.8rem; border-bottom: 1px solid var(--primary);">
+                            <input type="date" id="date-filter" style="width: auto; padding: 0.3rem; font-size: 0.8rem; border-bottom: 1px solid var(--primary);">
+                            <button id="clear-filter" class="delete-btn" style="font-size: 0.7rem;">Limpiar</button>
+                        </div>
+                    </div>
+                    <div id="transaction-list" class="item-list">
+                        <!-- Items will be injected here -->
+                    </div>
+                </section>
+
+                <section style="margin-top: 2.5rem;">
+                    <h3 class="section-title">Control de Deudas</h3>
+                    <div id="debt-list" class="item-list">
+                        <!-- Debt items will be injected here -->
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3 id="modal-title" class="section-title" style="margin-bottom: 0; border: none;">Detalles</h3>
+                <button class="delete-btn" onclick="closeModal()" style="font-size: 1.5rem;">✕</button>
+            </div>
+            <div class="table-container">
+                <table id="details-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-body">
+                        <!-- Content injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
