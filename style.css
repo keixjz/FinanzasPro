@@ -186,11 +186,18 @@ canvas {
     }
 
     .filters-container input {
-        flex: 1;
         min-width: 0; /* Allow shrinking */
     }
 
-    .filters-container #search-input { width: auto; }
+    .filters-container #search-input { 
+        flex: 2; 
+    }
+
+    .filters-container #date-filter { 
+        flex: 1;
+        max-width: 120px; /* Tamaño reducido para la fecha */
+        text-align: center;
+    }
 }
 
 /* Forms - ultra minimalist */
