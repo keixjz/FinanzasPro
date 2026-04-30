@@ -137,14 +137,60 @@ canvas {
     }
 }
 
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 .section-title {
     font-size: 0.9rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.5rem;
+    margin-bottom: 0; /* Updated to use margin on parent */
+    border: none; /* Removed from here, moved to header */
+}
+
+.filters-container {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.filters-container input {
+    width: auto;
+    font-size: 0.8rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--primary);
+    background: transparent;
+}
+
+.filters-container #search-input { width: 150px; }
+
+@media (max-width: 600px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filters-container {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .filters-container input {
+        flex: 1;
+        min-width: 0; /* Allow shrinking */
+    }
+
+    .filters-container #search-input { width: auto; }
 }
 
 /* Forms - ultra minimalist */

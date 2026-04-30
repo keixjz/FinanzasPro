@@ -110,12 +110,12 @@
             <!-- Lists Section -->
             <main>
                 <section>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                        <h3 class="section-title" style="margin-bottom: 0; border: none;">Historial</h3>
-                        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                            <input type="text" id="search-input" placeholder="Buscar movimiento..." style="width: 180px; padding: 0.3rem; font-size: 0.8rem; border-bottom: 1px solid var(--primary);">
-                            <input type="date" id="date-filter" style="width: auto; padding: 0.3rem; font-size: 0.8rem; border-bottom: 1px solid var(--primary);">
-                            <button id="clear-filter" class="delete-btn" style="font-size: 0.7rem;">Limpiar</button>
+                    <div class="section-header">
+                        <h3 class="section-title">Historial</h3>
+                        <div class="filters-container">
+                            <input type="text" id="search-input" placeholder="Buscar movimiento...">
+                            <input type="date" id="date-filter">
+                            <button id="clear-filter" class="delete-btn">Limpiar</button>
                         </div>
                     </div>
                     <div id="transaction-list" class="item-list">
