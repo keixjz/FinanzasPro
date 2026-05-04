@@ -51,21 +51,6 @@ header h1 span {
     font-weight: 300;
 }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-}
-
-.logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 1px solid var(--border);
-    opacity: 0.9;
-}
-
 /* Dashboard */
 .dashboard-grid {
     display: grid;
